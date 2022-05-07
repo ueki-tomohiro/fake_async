@@ -188,6 +188,9 @@ class FakeAsync {
               scheduleMicrotask: (_, __, ___, microtask) =>
                   _microtasks.add(microtask)));
 
+  T runWithClockOnly<T>(T Function(FakeAsync self) callback) =>
+      runZoned(() => withClock(_clock, () => callback(this)));
+
   /// Runs all pending microtasks scheduled within a call to [run] or
   /// [fakeAsync] until there are no more microtasks scheduled.
   ///

@@ -26,6 +26,15 @@ void main() {
     expect(FakeAsync().getClock(initialTime).now(), initialTime);
   });
 
+  group('enableScheduleMicrotask', () {
+    test('async', () async {
+      await FakeAsync().runWithClockOnly((async) async {
+        final v = await Future.value(1);
+        expect(v, 1);
+      });
+    });
+  });
+
   group('elapseBlocking', () {
     test('should elapse time without calling timers', () {
       Timer(elapseBy ~/ 2, neverCalled);
@@ -576,9 +585,7 @@ void main() {
             expectAsync1((timer) {
               ticks.add(timer.tick);
             }, count: 2));
-        async
-          ..elapse(elapseBy)
-          ..elapse(elapseBy);
+        async..elapse(elapseBy)..elapse(elapseBy);
         expect(ticks, [1, 2]);
       });
     });
